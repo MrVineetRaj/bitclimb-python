@@ -6,13 +6,11 @@ services:
     image: postgres:16
     container_name: databridge-database
     environment:
-      POSTGRES_USER: ${DATABASE_ADMIN_USER}
-      POSTGRES_PASSWORD: ${DATABASE_ADMIN_PASSWORD}
-    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements"]
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASS}
     ports:
       - "5432:5432"
     volumes:
-      # - ./pgconfig:/var/lib/postgresql/conf
       - pg-data:/var/lib/postgresql/data
   redis:
     image: redis:latest
@@ -52,5 +50,3 @@ services:
 volumes:
   pg-data:
   redis-data:
-
-# echo "hba_file = '/var/lib/postgresql/conf/pg_hba.conf'" >> /var/lib/postgresql/data/postgresql.conf
