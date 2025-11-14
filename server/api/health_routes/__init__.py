@@ -13,5 +13,6 @@ def registerRoutes():
   @router.get("/fail")
   async def health_fail_check():
     return await AsyncApiHandler(Actions.healthFailCheck)
-  
+
+
   return router
