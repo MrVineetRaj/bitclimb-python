@@ -47,11 +47,12 @@ class ErrorResponse(BaseModel):
     success: bool
     result: Any = None
 
-async def AsyncApiHandler(handler: Any):
+async def AsyncApiHandler(handler: Any, *args, **kwargs):
     try:
-      result = await handler()
+      result = await handler(*args,**kwargs)
       return result
     except Exception as e:
+      print(e)
       return ErrorResponse(
           message=str(e),
           statusCode=ERROR_CODES.INTERNAL_SERVER_ERROR.value,
