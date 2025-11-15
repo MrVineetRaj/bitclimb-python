@@ -33,6 +33,8 @@
 from api.error_codes import ERROR_CODES
 from typing import Any
 from pydantic import BaseModel
+from starlette.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 
 
 class ApiResponse(BaseModel):
@@ -50,15 +52,20 @@ class ErrorResponse(BaseModel):
 async def AsyncApiHandler(handler: Any, *args, **kwargs):
     try:
       result = await handler(*args,**kwargs)
-      return result
+      if isinstance(result, ApiResponse) or isinstance(result,ErrorResponse):
+        return JSONResponse(
+            jsonable_encoder(result.model_dump()),
+            status_code=result.statusCode
+        )
+      return result;
     except Exception as e:
       print(e)
-      return ErrorResponse(
+      return JSONResponse(ErrorResponse(
           message=str(e),
           statusCode=ERROR_CODES.INTERNAL_SERVER_ERROR.value,
           success=False,
           result=None
-      )
+      ).model_dump(),status_code=500)
 
 
 def generateApiResponse(message:str,statusCode:int,result:Any)->ApiResponse:

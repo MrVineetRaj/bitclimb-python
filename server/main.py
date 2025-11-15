@@ -9,6 +9,7 @@ from api.health_routes import registerRoutes as registerHealthRoutes
 from api.auth_routes import registerRoutes as registerAuthRoutes
 
 from starlette.middleware.sessions import SessionMiddleware
+from middlewares.auth_middleware import AuthMiddleware
 
 
 @asynccontextmanager
@@ -34,14 +35,17 @@ async def startup():
     async with engine.begin() as conn:
         await conn.run_sync(models.Base.metadata.create_all)
 
+app.add_middleware(AuthMiddleware)
 app.add_middleware(
     SessionMiddleware,
     secret_key="some-super-secret-key"  # keep this env-based in prod
 )
+
+# auth middleware
 @app.get("/")
 def redirect_to_docs():
   return RedirectResponse(url="/docs")
 
 
-app.include_router(registerHealthRoutes(),prefix="/api/v1/health")
-app.include_router(registerAuthRoutes(),prefix="/api/v1/auth")
+app.include_router(registerHealthRoutes(),prefix="/api/v1/health",tags=["Health"])
+app.include_router(registerAuthRoutes(),prefix="/api/v1/auth",tags=["Authentication"])

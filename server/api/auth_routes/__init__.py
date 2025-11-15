@@ -20,6 +20,11 @@ def registerRoutes():
   @router.get("/profile")
   async def get_profile(request:Request,db: AsyncSession = Depends(get_db)):
     return await AsyncApiHandler(Actions.get_profile,request,db)
+  
+  @router.get("/logout")
+  async def logout(request: Request):
+    request.session.clear()
+    return {"message": "Logged out"}
 
 
   return router

@@ -7,5 +7,5 @@ class Actions:
   
   @staticmethod
   async def healthFailCheck():
-    raise Exception("Forced error")
+    # raise Exception("Forced error")
     return generateError(message="Server is up and running",errorCode=ERROR_CODES.SERVICE_UNAVAILABLE,result=None)
