@@ -1,7 +1,13 @@
 import uuid
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import String, DateTime, func, Integer
+from sqlalchemy import String, DateTime, func, Integer,Enum
 from datetime import datetime
+import enum
+
+class UserRole(str, enum.Enum):
+    USER = "USER"
+    ADMIN = "ADMIN"
+
 
 class Base(DeclarativeBase):
     pass
@@ -17,6 +23,12 @@ class User(Base):
 
     name: Mapped[str] = mapped_column(String(255))
     email:  Mapped[str] = mapped_column(String(255))
+
+    role: Mapped[UserRole] = mapped_column(
+        Enum(UserRole, name="user_role_enum"),
+        default=UserRole.USER,
+        nullable=True
+    )
 
     createdAt: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

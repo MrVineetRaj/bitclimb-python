@@ -36,14 +36,12 @@ class Actions:
           name=name,
           email=primary_email
       )
-      db.add(**db_user)
+      db.add(db_user)
       await db.commit()
 
-    print(db_user)
-
     return generateApiResponse(
-        message="Profile Fetched",
-        statusCode=200,
+        message="Logged in",
+        statusCode=201,
         # result={**db_user,"avatar":avatar}
         result=None
       )
